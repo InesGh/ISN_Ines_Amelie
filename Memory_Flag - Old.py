@@ -3,7 +3,7 @@
 #description     : Petit jeu de mémoire en ligne
 #author          : Inès & Amélie 
 #date            : année scolaire 2015-2016 (Mars Avril 2016)
-#version         : 5.1
+#version         : 4.1
 #usage           : python Memory_Flag.py
 #notes           : projet INS BAC 2016
 #python_version  : 3.5.1
