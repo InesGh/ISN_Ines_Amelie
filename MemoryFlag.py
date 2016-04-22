@@ -3,15 +3,16 @@
 #description     : Petit jeu de memoire en ligne
 #author          : Inès & Amélie 
 #date            : Annee Scolaire 2015-2016 (Mars Avril 2016)
-#version         : 5.2
+#version         : 5.3
 #usage           : python MemoryFlag.py
 #notes           : projet INS BAC 2016
 #python_version  : 3.5.1  
 #==============================================================================
 
 # Import des modules necessaire a l'execution du script.
-import random, sys # On importe le module 'random' pour le placement des cartes soit aleatoire et le module 'sys' pour l'execution du script
+import random, sys    # On importe le module 'random' pour le placement des cartes soit aleatoire et le module 'sys' pour l'execution du script
 from tkinter import * # On importe le module tkinter pour afficher une fenetre graphique
+
 
 #_____________________________________________________#
 #                                                     #
@@ -24,16 +25,14 @@ def MenuLevel():          # définition du menu de niveau
     label          = Label ( WindowDefLevel, 
                              text = "\nMEMORY FLAG \n \n Veuillez choisir votre niveau\n",
                              font = "President 20 bold italic",
-                             fg = "blue")
+                             fg = "purple")
     label.pack()
-    liste          = Listbox ( WindowDefLevel, 
-                               width=35, 
-                               height=5 ) # creation d'une liste avec les différents niveaux
+    liste          = Listbox ( WindowDefLevel, width=30, height=5 ) # creation d'une liste avec les différents niveaux
 
     liste.insert   ( 1, " Niveau Débutant (18 cartes)")
     liste.insert   ( 2, " Niveau Intermédiaire (30 cartes)")
     liste.insert   ( 3, " Niveau Expert (42 cartes)")
-    liste.pack() # permet d'afficher dans la fenetre le packaging 
+    liste.pack()          # permet d'afficher dans la fenetre le packaging 
 
     WindowDefLevel.title("Jeu 'MEMORY FLAG' ~ ISN 2015-2016 ~ Inès & Amélie ~ Séléction du niveau de difficulté") # titre de la première fenetre
 	
@@ -41,14 +40,14 @@ def MenuLevel():          # définition du menu de niveau
             text=">> Valider le Choix du Niveau <<",
             cursor = "heart",
             font="sans 12 bold",
-            fg     = "lawn green",
+            fg     = "green",
             command=lambda: CombineFuncs ( DefLevel 
                                          ( liste.curselection()),
                                            WindowDefLevel.destroy(), 
                                            ExecGame())).pack()
-    # Creation du bouton valider le choix du niveau sur la fenetre de definition du niveau, font= police de caractère, fg=couleur de la police, command= execution lors du clic; passage sur le plateau de carte (execgame) et destruction(destroy) de la fenetre de definitiondu niveau   
-    # La commande Lambda est très pratiques pour créer des fonctions, quand on a besoin d’une fonction, mais que l’on ne va l’utiliser qu’une seule fois.
-    # Car on peut définir et utiliser cette fonction "anonyme" d’une traite, ce qui évite l’écriture en deux temps.
+# Creation du bouton valider le choix du niveau sur la fenetre de definition du niveau, font = police de caractère, fg = couleur de la police, command= execution lors du clic; passage sur le plateau de carte (execgame) et destruction(destroy) de la fenetre de definitiondu niveau   
+# La commande Lambda est très pratiques pour créer des fonctions, quand on a besoin d’une fonction, mais que l’on ne va l’utiliser qu’une seule fois.
+# Car on peut définir et utiliser cette fonction "anonyme" d’une traite, ce qui évite l’écriture en deux temps.
 
     Button ( WindowDefLevel,
              text         = ">> Quitter le jeu <<",
@@ -56,35 +55,60 @@ def MenuLevel():          # définition du menu de niveau
              font         = "sans 12 bold italic",
              fg           = "red",
              command      = WindowDefLevel.destroy).pack()
-             
-    PicHome               = PhotoImage ( file = "photo.gif")
-    PageHome              = Canvas ( WindowDefLevel)
-    PageHome.create_image ( 50,70, anchor=NW, image=PicHome)
-    PageHome.pack()
 #Creation du bouton quitter dans la fenetre de definition du niveau, font= police de caractère, fg=couleur de la police, command= execution lors du clic; passage sur le plateau de carte et destruction(destroy) de la fenetre de definitiondu niveau
+    
+    PicHome               = PhotoImage ( file = "Images\PicHome1.png")
+    PageHome              = Canvas ( WindowDefLevel)
+    PageHome.create_image ( 200 , 100, anchor=CENTER, image=PicHome) # Placement et positionement de l'image d'accueil par rapport au centre
+    PageHome.pack()
+#Insertion d'une image sur la première fenêtre
+
     WindowDefLevel.mainloop()
 
+	
 def DefLevel ( Choice ): # Definitions de la fonction du choix du niveau du jeu 	
     global NbLine, NbRow, LibLevel  #initialisation des varibles selon le niveau 
     
-    if str(Choice)        == '(0,)': #str = string: caractères 
-        NbLine            = 3
-        NbRow             = 6
-        LibLevel          = ' Niveau Débutant '
-
-    elif str(Choice)      == '(1,)':
-        NbLine            = 5
-        NbRow             = 6
-        LibLevel          = ' Niveau Intermédiaire '
-
+    if str(Choice)   == '(2,)': #str = string: caractères 
+        NbLine       = 7
+        NbRow        = 6
+        LibLevel     = ' Niveau Expert '
+    elif str(Choice) == '(1,)':
+        NbLine       = 5
+        NbRow        = 6
+        LibLevel     = ' Niveau Intermédiaire '
     else:
-        NbLine            = 7
-        NbRow             = 6
-        LibLevel          = ' Niveau Expert'
+        NbLine       = 3
+        NbRow        = 6
+        LibLevel     = ' Niveau Débutant'
+        return NbLine, NbRow
 
-        return       NbLine, NbRow
+	
+def ExecGame(): # Definitions de la fonction d'execution du jeu
+    global NbTotalFlags, ViewFlag, RetunedFlags, Flag, WindowGame # Déclaration des variables global qui seront utilisées dans cette fonction 
+	
+    NbTotalFlags     = NbLine * NbRow   # calcule du nb de cartes selon le niveau choisi par l'utilisateur
+    WindowGame       = Tk()   #fenetre de Definition du jeu
+    WindowGame.title( " Jeu 'MEMORY FLAG' ~ ISN 2015-2016 ~ Inès & Amélie ~ "
+                      + ( LibLevel ) ) # titre de la deuxième fenetre + libellé du niveau varible selon choix de l'utilisateur    
+    Flag             = LoadFlag() # la liste Flag contient les images gif chargées (Le dos + le nombre total de cartes)
+    RetunedFlags     = Flag[0]    # Le dos des cartes est l'image [0]    
+    ViewFlag         = Canvas(WindowGame, width=650, height=780, bg='white smoke', bd=10, relief="ridge") #height= taille ; bg=background; relief=cadre initialisation de la fenetre graphique (WindowGame)	
+    ViewFlag.pack()
+    InitPlayGame() # initialisation des données du jeu pour commencer jeux
+    ViewFlag.bind( '<Button-1>', OnMouseClick ) # gestionnaire du clic de la souris
+    
+    Button ( WindowGame,
+             text= ">> Quitter le jeu <<",
+             cursor="pirate",
+             font= "sans 12 bold ",
+             fg= "red",
+             command=WindowGame.destroy).pack() 
+#Creation du bouton quitter sur la fenetre du jeu, font= police de caractère, fg=couleur de la police, command= execution lors du clic => fermeture (destroy) de la fenetre principale du jeu
 
-		
+    WindowGame.mainloop()     # boucle principale
+
+	
 def InitPlayGame():             # Définition de la fontion d'initialisation du jeu 
     global duree, NbFindFlags, FlagList, FlagsMixed  # Déclaration des variables global qui seront utilisées dans la fontion d'initialisation 
 	
@@ -105,16 +129,19 @@ def InitDisplay ():      # Définition de la fontion d'initialisation de l'affic
         for Column in range( NbRow ):
             liste_ids.append ( ViewFlag.create_image ( 110*Column+10, 
                                                        110*Row+10,
-                                                       anchor=NW,
-                                                       image = RetunedFlags,
-                                                       tags="memory",))
-			# Placement et positionement des cartes
+                                                       anchor = NW,
+                                                       image  = RetunedFlags,
+                                                       tags   ="memory" ) )
+ # Placement et positionement des cartes par rapport au coin haut et gauche
+
     return liste_ids
 
 
-def LoadFlag ():                      # Definition de la fontion du chargement des cartes sur le plateau
-    NbFlag           = 1 + NbTotalFlags // 2  # Nombre de drapeaux correspond ou nombre de couple de carte / par 2 + 1 qui correspond au dos des cartes 
-    Flag             = []                     # Boucle pour allimanter la liste des images en GIF des drapeaux contenu dans le dossier Images\.... prefixé par img  
+def LoadFlag ():     # Definition de la fontion du chargement des cartes sur le plateau
+    NbFlag           = 1 + NbTotalFlags // 2
+# Nombre de drapeaux correspond ou nombre de couple de carte / par 2 + 1 qui correspond au dos des cartes 
+    Flag             = []
+# Boucle pour allimanter la liste des images en GIF des drapeaux contenu dans le dossier Images\.... prefixé par img  
     for i in range(NbFlag): 
         Flag.append(PhotoImage(file="Images\img{}.gif".format(i)))
         
@@ -122,8 +149,10 @@ def LoadFlag ():                      # Definition de la fontion du chargement d
 
 
 def MixFlag ():            # Définition de la fonction de mélange des cartes sur la fenetre du jeu
-    liste            = list(range(1, NbTotalFlags//2 + 1)) * 2 # Constitution de la liste contenant le couple des imgages plus le dos
-    random.shuffle(liste)  # Utilisation du module pour le mélange des cartes selectionnées
+
+    liste            = list ( range ( 1, NbTotalFlags//2 + 1)) * 2
+# Constitution de la liste contenant le couple des imgages plus le dos
+    random.shuffle(liste)  # Utilisation du module aléatoire pour le mélange des cartes selectionnées
     return liste
  
 
@@ -139,27 +168,10 @@ def DeleteFlag ():  # Definition de la fonction de suppression du couple de cart
     ViewFlag.delete ( SecondFlag )     # Suppression de la carte 2 trouvée
     NbFindFlags       += 2             # Incrémentation de la variable de 2, car un couple à été trouvé
     
-    if   NbFindFlags  >=  NbTotalFlags: #Condition si le nombre de couple trouvé est supérieur ou égale au nombre total de carte message BRAVO si non mise à zéro du click souris pour continuer de jouer
+    if   NbFindFlags  >=  NbTotalFlags: #Condition si le nombre de couple trouvé est supérieur ou égale au nombre total de carte => message BRAVO si non mise à zéro du click souris pour continuer de jouer
         WellDone()                  # Appel de la fonction BRAVO
     else:
         RAZMouseClick()             # Appel de la fonction mise à zéro du clic souris
-
-
-def WellDone ():         # Definition de la fonction de fin de la partie pour l'affichage des messages de félicitation
-    ViewFlag.delete(ALL) # On efface d'abord la fenetre du jeu
-    x, y = ViewFlag.winfo_reqwidth()//2, ViewFlag.winfo_reqheight()//2 # determination du point central de la fenetre du jeux
-# affichage des messages de fin de jeu. Les messages sont placés selon les coordonnées de X et Y
-    ViewFlag.create_text(x,     y-250, text= " Partie terminée ",                         font="sans 20 bold",        fill="hotpink") 
-    ViewFlag.create_text(x,     y-200, text= " Félicitations ! ",                         font="sans 20 bold",        fill="hotpink")
-    ViewFlag.create_text(x,     y+70,  text= " Jeu créé par Inès & Amélie ",              font="sans 10",             fill="Black")
-    ViewFlag.create_text(x,     y+90,  text= " Projet ISN (Année scolaire 2015-2016) ",   font="sans 10",             fill="Black")
-    ViewFlag.create_text(x,     y,     text= " Une autre partie ? ", 		              font="sans 15 bold italic", fill="hotpink")
-    ViewFlag.create_text(x+260, y+375, text= "© Inès & Amélie ",                          font="sans 10 italic",      fill="Black")
-    
-    ViewFlag.create_window(x, y+40,    window = Button(ViewFlag,   text="  ~> Ici <~ ", cursor="heart", font="sans 10 bold", fg="deep pink", command=lambda: CombineFuncs(WindowGame.destroy(), MenuLevel())))
-# Creation du bouton rejouer sur la fenetre du jeu, font= police de caractère, fg=couleur de la police, command= execution lors du clic; fermeture (destroy) de la fenetre principale du jeu et retour au menu du niveau 
-# La commande Lambda est très pratiques pour créer des fonctions, quand on a besoin d’une fonction, mais que l’on ne va l’utiliser qu’une seule fois.
-# Car on peut définir et utiliser cette fonction "anonyme" d’une traite, ce qui évite l’écriture en deux temps.
 
 
 def RAZMouseClick (): # Definition de la fonction de mise à zéro du clic souris	
@@ -214,6 +226,26 @@ def ValueFlag (IdFlag): # Definition de la fonction d'affectation d'une valeur �
 def MatchFlag   ( ClickFirstFlag, ClickSecondFlag):     # Definition de la fonction de vérification de la correspondance entre les deux cartes
     return bool ( ValueFlag ( ClickFirstFlag ) == ValueFlag ( ClickSecondFlag ))
 
+	
+def WellDone ():         # Definition de la fonction de fin de la partie pour l'affichage des messages de félicitation
+    ViewFlag.delete(ALL) # On efface d'abord la fenetre du jeu
+    x, y = ViewFlag.winfo_reqwidth()//2, ViewFlag.winfo_reqheight()//2 # determination du point central de la fenetre du jeux
+# affichage des messages de fin de jeu. Les messages sont placés selon les coordonnées de X et Y
+    ViewFlag.create_text(x,     y-250, text= " Partie terminée ",                         font="sans 20 bold",        fill="hotpink") 
+    ViewFlag.create_text(x,     y-200, text= " Félicitations ! ",                         font="sans 20 bold",        fill="hotpink")
+    ViewFlag.create_text(x,     y+70,  text= " Jeu créé par Inès & Amélie ",              font="sans 10",             fill="Black")
+    ViewFlag.create_text(x,     y+90,  text= " Projet ISN (Année scolaire 2015-2016) ",   font="sans 10",             fill="Black")
+    ViewFlag.create_text(x,     y,     text= " Une autre partie ? ", 		              font="sans 15 bold italic", fill="hotpink")
+    ViewFlag.create_text(x+260, y+375, text= "© Inès & Amélie ",                          font="sans 10 italic",      fill="Black")
+    
+    ViewFlag.create_window( x,   y+40,
+                            window = Button ( ViewFlag,   text="  ~> Ici <~ ", cursor="heart",
+                    							font="sans 10 bold", fg="deep pink",
+												command=lambda: CombineFuncs ( WindowGame.destroy(), MenuLevel())))
+# Creation du bouton rejouer sur la fenetre du jeu, font= police de caractère, fg=couleur de la police, command= execution lors du clic; fermeture (destroy) de la fenetre principale du jeu et retour au menu du niveau 
+# La commande Lambda est très pratiques pour créer des fonctions, quand on a besoin d’une fonction, mais que l’on ne va l’utiliser qu’une seule fois.
+# Car on peut définir et utiliser cette fonction "anonyme" d’une traite, ce qui évite l’écriture en deux temps.
+
 
 def CombineFuncs(self, *funcs):  # Definitionde la fonction avec une combinaison de fonctions afin d'executer similtanément deux actions 
 
@@ -222,30 +254,6 @@ def CombineFuncs(self, *funcs):  # Definitionde la fonction avec une combinaison
             f( *args, **kwargs)
 
     return CombinedFunc
-
-	
-def ExecGame(): # Definitions de la fonction d'execution du jeu
-    global NbTotalFlags, ViewFlag, RetunedFlags, Flag, WindowGame # Déclaration des variables global qui seront utilisées dans cette fonction 
-	
-    NbTotalFlags     = NbLine * NbRow   # calcule du nb de cartes selon le niveau choisi par l'utilisateur
-    WindowGame       = Tk()   #fenetre de Definition du jeu
-    WindowGame.title( " Jeu 'MEMORY FLAG' ~ ISN 2015-2016 ~ Inès & Amélie ~ "
-                      + (LibLevel)) # titre de la deuxième fenetre + libellé du niveau varible selon choix de l'utilisateur    
-    Flag             = LoadFlag() # la liste Flag contient les images gif chargées (Le dos + le nombre total de cartes)
-    RetunedFlags     = Flag[0]    # Le dos des cartes est l'image [0]    
-    ViewFlag         = Canvas(WindowGame, width=650, height=780, bg='white',bd=5, relief="ridge") #height= taille ; bg=background; relief=cadre initialisation de la fenetre graphique (WindowGame)	
-    ViewFlag.pack()
-    InitPlayGame() # initialisation des données du jeu pour commencer jeux
-    ViewFlag.bind('<Button-1>', OnMouseClick) # gestionnaire du clic de la souris
-    
-    Button ( WindowGame,
-             text= ">> Quitter le jeu <<",
-             cursor="pirate",
-             font= "sans 12 bold ",
-             fg= "tomato",
-             command=WindowGame.destroy).pack() 
-    #Creation du bouton quitter sur la fenetre du jeu, font= police de caractère, fg=couleur de la police, command= execution lors du clic; fermeture (destroy) de la fenetre principale du jeu
-    WindowGame.mainloop()     # boucle principale
 
 	
 if __name__ == "__main__": # Nécessaire au fonctionnement du jeu dans sa globalité, sans ses deux lignes le jeu ne tournerait pas
