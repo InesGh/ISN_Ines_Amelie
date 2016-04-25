@@ -80,8 +80,8 @@ def DefLevel ( Choice ): # Definitions de la fonction du choix du niveau du jeu
         LibLevel     = ' Niveau Expert '
 
     else:
-        NbLine       = 2#6
-        NbRow        = 2#3
+        NbLine       = 6
+        NbRow        = 3
         LibLevel     = ' Niveau Débutant' #Par défaut niveau débutant 
         return NbLine, NbRow
 
