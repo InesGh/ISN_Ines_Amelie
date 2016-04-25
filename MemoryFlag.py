@@ -80,8 +80,8 @@ def DefLevel ( Choice ): # Definitions de la fonction du choix du niveau du jeu
         LibLevel     = ' Niveau Expert '
 
     else:
-        NbLine       = 6
-        NbRow        = 3
+        NbLine       = 2#6
+        NbRow        = 2#3
         LibLevel     = ' Niveau Débutant' #Par défaut niveau débutant 
         return NbLine, NbRow
 
@@ -95,7 +95,7 @@ def ExecGame(): # Definitions de la fonction d'execution du jeu
                       + ( LibLevel ) ) # titre de la deuxième fenetre + libellé du niveau varible selon choix de l'utilisateur    
     Flag             = LoadFlag() # la liste Flag contient les images gif chargées (Le dos + le nombre total de cartes)
     RetunedFlags     = Flag[0]    # Le dos des cartes est l'image [0]    
-    ViewFlag         = Canvas(WindowGame, width=770, height=650, bg='white smoke', bd=5, relief="ridge") #height= taille ; bg=background; relief=cadre initialisation de la fenetre graphique (WindowGame)	
+    ViewFlag         = Canvas(WindowGame, width=770, height=650, bg='white smoke', bd=10, relief="ridge") #height= taille ; bg=background; relief=cadre initialisation de la fenetre graphique (WindowGame)	
     ViewFlag.pack()
     InitPlayGame() 	# Initialisation des données du jeu pour commencer jeux
     ViewFlag.bind( '<Button-1>', OnMouseClick ) # gestionnaire du clic de la souris
@@ -231,7 +231,7 @@ def MatchFlag   ( ClickFirstFlag, ClickSecondFlag):     # Definition de la fonct
 	
 def WellDone ():         # Definition de la fonction de fin de la partie pour l'affichage des messages de félicitation
     ViewFlag.delete(ALL) # On efface d'abord la fenetre du jeu
-    x, y = ViewFlag.winfo_qwidth()//2, ViewFlag.winfo_qheight()//2 # determination du point central de la fenetre du jeux
+    x, y = ViewFlag.winfo_reqwidth()//2, ViewFlag.winfo_reqheight()//2 # determination du point central de la fenetre du jeux
 
 # affichage des messages de fin de jeu. Les messages sont placés selon les coordonnées de X et Y
 
@@ -240,7 +240,7 @@ def WellDone ():         # Definition de la fonction de fin de la partie pour l'
     ViewFlag.create_text(x,     y+70,  text= " Jeu créé par Inès & Amélie ",              font="sans 10",             fill="Black")
     ViewFlag.create_text(x,     y+90,  text= " Projet ISN (Année scolaire 2015-2016) ",   font="sans 10",             fill="Black")
     ViewFlag.create_text(x,     y,     text= " Une autre partie ? ", 		              font="sans 15 bold italic", fill="hotpink")
-    ViewFlag.create_text(x+260, y+375, text= "© Inès & Amélie ",                          font="sans 10 italic",      fill="Black")
+    ViewFlag.create_text(x+310, y+305, text= "© Inès & Amélie ",                          font="sans 10 italic",      fill="Black")
     
     ViewFlag.create_window ( x, y+40,
                              window = Button ( ViewFlag,
