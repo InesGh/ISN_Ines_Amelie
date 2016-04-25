@@ -3,7 +3,7 @@
 #description     : Petit jeu de memoire en ligne
 #author          : Inès & Amélie 
 #date            : Annee Scolaire 2015-2016 (Mars Avril 2016)
-#version         : 5.3
+#version         : 5.5
 #usage           : python MemoryFlag.py
 #notes           : projet INS BAC 2016
 #python_version  : 3.5.1  
@@ -70,18 +70,18 @@ def DefLevel ( Choice ): # Definitions de la fonction du choix du niveau du jeu
     global NbLine, NbRow, LibLevel  #initialisation des varibles selon le niveau 
     
     if str(Choice)   == '(1,)': #str = string: caractères 
-        NbLine       = 5
-        NbRow        = 6
+        NbLine       = 6
+        NbRow        = 5
         LibLevel     = ' Niveau Intermédiaire '
 
     elif str(Choice) == '(2,)':
-        NbLine       = 7
-        NbRow        = 6
+        NbLine       = 6
+        NbRow        = 7
         LibLevel     = ' Niveau Expert '
 
     else:
-        NbLine       = 3
-        NbRow        = 6
+        NbLine       = 6
+        NbRow        = 3
         LibLevel     = ' Niveau Débutant' #Par défaut niveau débutant 
         return NbLine, NbRow
 
@@ -95,7 +95,7 @@ def ExecGame(): # Definitions de la fonction d'execution du jeu
                       + ( LibLevel ) ) # titre de la deuxième fenetre + libellé du niveau varible selon choix de l'utilisateur    
     Flag             = LoadFlag() # la liste Flag contient les images gif chargées (Le dos + le nombre total de cartes)
     RetunedFlags     = Flag[0]    # Le dos des cartes est l'image [0]    
-    ViewFlag         = Canvas(WindowGame, width=650, height=780, bg='white smoke', bd=10, relief="ridge") #height= taille ; bg=background; relief=cadre initialisation de la fenetre graphique (WindowGame)	
+    ViewFlag         = Canvas(WindowGame, width=770, height=650, bg='white smoke', bd=5, relief="ridge") #height= taille ; bg=background; relief=cadre initialisation de la fenetre graphique (WindowGame)	
     ViewFlag.pack()
     InitPlayGame() 	# Initialisation des données du jeu pour commencer jeux
     ViewFlag.bind( '<Button-1>', OnMouseClick ) # gestionnaire du clic de la souris
@@ -231,7 +231,7 @@ def MatchFlag   ( ClickFirstFlag, ClickSecondFlag):     # Definition de la fonct
 	
 def WellDone ():         # Definition de la fonction de fin de la partie pour l'affichage des messages de félicitation
     ViewFlag.delete(ALL) # On efface d'abord la fenetre du jeu
-    x, y = ViewFlag.winfo_reqwidth()//2, ViewFlag.winfo_reqheight()//2 # determination du point central de la fenetre du jeux
+    x, y = ViewFlag.winfo_qwidth()//2, ViewFlag.winfo_qheight()//2 # determination du point central de la fenetre du jeux
 
 # affichage des messages de fin de jeu. Les messages sont placés selon les coordonnées de X et Y
 
@@ -242,14 +242,20 @@ def WellDone ():         # Definition de la fonction de fin de la partie pour l'
     ViewFlag.create_text(x,     y,     text= " Une autre partie ? ", 		              font="sans 15 bold italic", fill="hotpink")
     ViewFlag.create_text(x+260, y+375, text= "© Inès & Amélie ",                          font="sans 10 italic",      fill="Black")
     
-    ViewFlag.create_window ( x,   y+40,
-                            window = Button ( ViewFlag,   text = "  ~> Ici <~ ", cursor = "heart",
-                    							font = "sans 10 bold", fg = "deep pink",
-												command=lambda: CombineFuncs ( WindowGame.destroy(), MenuLevel())))
+    ViewFlag.create_window ( x, y+40,
+                             window = Button ( ViewFlag,
+                    						    text = "  ~> Ici <~ ",
+												cursor = "heart",
+                    							font = "sans 10 bold",
+												fg = "deep pink",
+												command=lambda: CombineFuncs ( WindowGame.destroy(),
+                                 											   MenuLevel( )
+																			  )
+											 )
+							)
 # Creation du bouton rejouer sur la fenetre du jeu, font= police de caractère, fg=couleur de la police, command= execution lors du clic; fermeture (destroy) de la fenetre principale du jeu et retour au menu du niveau 
 # La commande Lambda est très pratiques pour créer des fonctions, quand on a besoin d’une fonction, mais que l’on ne va l’utiliser qu’une seule fois.
 # Car on peut définir et utiliser cette fonction "anonyme" d’une traite, ce qui évite l’écriture en deux temps.
-
 
 def CombineFuncs(self, *funcs):  # Definitionde la fonction avec une combinaison de fonctions afin d'executer similtanément deux actions 
 
